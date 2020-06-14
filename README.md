@@ -1,6 +1,7 @@
 # tuya-client
 
-> An electron-vue project
+> desktop client for toggling your tuya devices
+
 
 #### Build Setup
 

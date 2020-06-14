@@ -1,35 +1,64 @@
 <template>
 	<div id="wrapper">
-		<div>Hello</div>
+		<div class='title'>Hello</div>
 		<el-row class='containerRow'>
 			<draggable
 				v-model="rooms"
 				class='sortable-list'
 				style='background:grey;'>
+				<transition-group type='transition' :name='!dragRoom ? "flip-list" : null'>
 				<el-col :span="6"
 					class='roomColumn sortable'
 					v-for="room in rooms"
-					:key="room.id">
+					:key="room.id"
+					v-bind='dragRoomOptions'
+					@start='dragRoom = true'
+					@end='dragRoom = false'>
 					<el-row class='roomHeader'>
 						name: {{ room.name }}
 					</el-row>
-
+					
+					
 					<draggable
 						group='room'
-						:list='room.devices'>
-						<el-row
-							class='deviceRow'
-							v-for='device in room.devices'
-							:key='device.id'>
-							deviceName: {{ device.name }}
+						ghost-class="ghost"
+						:list='room.devices'
+						v-bind='dragDeviceOptions'
+						@start='dragDevice = true'
+						@end='dragDevice = false'>
+						<transition-group type='transition' :name='!dragDevice ? "flip-list" : null'>
+							<el-row
+								class='deviceRow'
+								v-for='device in room.devices'
+								:key='device.id'>
+								deviceName: {{ device.name }}
 
-						</el-row>
-
+							</el-row>
+						</transition-group>
 					</draggable>
+					
+					<el-row class='deviceRow addDevice' @click="dialogVisible = true">
+						<el-button type="text" @click="dialogVisible = true">Add device +</el-button>
+					</el-row>
 				</el-col>
+				</transition-group>
 			</draggable>
 		</el-row>
+
+		<el-dialog
+			title="Add device"
+			:visible.sync="dialogVisible"
+			width="30%"
+			:before-close="handleClose">
+			<span>This is a message</span>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible = false">Cancel</el-button>
+				<el-button type="primary" @click="dialogVisible = false">Add</el-button>
+			</span>
+		</el-dialog>
 	</div>
+
+	
 </template>
 
 <script>
@@ -41,8 +70,9 @@
 		},
 		data () {
 			return {
-				value1: true,
-				value2: true,
+				dialogVisible: false,
+				dragDevice: false,
+				dragRoom: false,
 				rooms: [
 					{
 						id:'1',
@@ -97,6 +127,24 @@
 			open (link) {
 				this.$electron.shell.openExternal(link)
 			}
+		},
+		computed: {
+			dragDeviceOptions() {
+				return {
+					animation: 200,
+					group: "room",
+					disabled: false,
+					ghostClass: "ghost"
+				};
+			},
+			dragRoomOptions() {
+				return {
+					animation: 200,
+					disabled: false,
+					ghostClass: "ghost"
+				};
+			}
+
 		}
 	}
 </script>
@@ -116,18 +164,12 @@
 		background:
 		radial-gradient(
 			ellipse at top left,
-			rgba(255, 255, 255, 1) 40%,
-			rgba(229, 229, 229, .9) 100%
+			rgb(48, 48, 48) 40%,
+			rgba(27, 27, 27, 0.9) 100%
 		);
 		height: 100vh;
 		padding: 60px 80px;
 		width: 100vw;
-	}
-
-	#logo {
-		height: auto;
-		margin-bottom: 20px;
-		width: 420px;
 	}
 
 	main {
@@ -142,14 +184,8 @@
 		flex-direction: column;
 	}
 
-	.welcome {
-		color: #555;
-		font-size: 23px;
-		margin-bottom: 10px;
-	}
-
 	.title {
-		color: #2c3e50;
+		color: #c7c7c7;
 		font-size: 20px;
 		font-weight: bold;
 		margin-bottom: 6px;
@@ -157,20 +193,42 @@
 	.el-col {
 		border-radius: 4px;
 	}
+
 	.roomColumn {
 		padding:10px;
 		margin:10px;
 		min-height: 500px;
-		background-color:gray;
+		background-color:rgb(240, 239, 239);
+		border-radius:4px;
 		/* background-color: red; */
 		.roomHeader {
+			border-radius:4px;
+			margin:3px;
 			background-color: cornsilk;
+		}
+		.addDevice {
+			background-color: rgb(149, 201, 149)!important;
 		}
 
 		.deviceRow {
+			border-radius:4px;
 			padding: 5px;
 			margin: 5px;
-			background-color: rgb(240, 239, 239)
+			background-color: rgb(180, 180, 180)
 		}
+	}
+
+	.flip-list-move {
+		transition: transform 0.5s;
+	}
+
+	.no-move {
+		transition: transform 0s;
+	}
+
+	.ghost {
+		border-radius:0px;
+		opacity: 0.8;
+		background: #c8ebfb;
 	}
 </style>
