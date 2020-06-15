@@ -1,6 +1,18 @@
 <template>
 	<div id="wrapper">
-		<div class='title'>Hello</div>
+		<div class='title'>TUYA-CLIENT</div>
+		<el-row>
+			<el-col :span='6' id='addRoomCol' style='display:flex;'>
+				<el-input placeholder="Add room" v-model="addRoomInput" style='float:left;'></el-input>
+				<el-button type="primary" size='small' icon="el-icon-plus" style='float:left;margin-left:-6px;'></el-button>
+			</el-col>
+			<el-col :span='6' id='toggleAll' style='margin-left:20px; margin-top:7px'>
+				<span style='margin-left:5px; color:white;'>Toggle All</span>
+				<el-button type="primary" size='mini' icon="el-icon-sunrise"></el-button>
+				<el-button type="danger" size='mini' icon="el-icon-moon"></el-button>
+			</el-col>
+		</el-row>
+			
 		<el-row class='containerRow'>
 			<draggable
 				v-model="rooms"
@@ -15,7 +27,7 @@
 					@start='dragRoom = true'
 					@end='dragRoom = false'>
 					<el-row class='roomHeader'>
-						name: {{ room.name }}
+						{{ room.name }}
 					</el-row>
 					
 					
@@ -32,13 +44,19 @@
 								v-for='device in room.devices'
 								:key='device.id'>
 								deviceName: {{ device.name }}
+								<el-switch
+									style="display: inline block; float: right;"
+									v-model="device.on"
+									active-color="#13ce66"
+									inactive-color="#ff4949">
+								</el-switch>
 
 							</el-row>
 						</transition-group>
 					</draggable>
 					
-					<el-row class='deviceRow addDevice' @click="dialogVisible = true">
-						<el-button type="text" @click="dialogVisible = true">Add device +</el-button>
+					<el-row class='deviceRow addDevice' v-on:click="dialogVisible = true">
+						<el-button type="text" @click="dialogVisible = true">Add device</el-button>
 					</el-row>
 				</el-col>
 				</transition-group>
@@ -70,62 +88,23 @@
 		},
 		data () {
 			return {
+				tmp_toggle_1:false,
+				addRoomInput: '',
 				dialogVisible: false,
 				dragDevice: false,
-				dragRoom: false,
-				rooms: [
-					{
-						id:'1',
-						name:'room1',
-						devices:[
-							{
-								id:'1_device1',
-								name:'1_device1_name'
-							},
-							{
-								id:'1_device2',
-								name:'1_device2_name'
-							}
-						],
-					},
-					{
-						id:'2',
-						name:'room2',
-						devices:[
-							{
-								id:'2_device1',
-								name:'2_device1_name'
-							},
-							{
-								id:'2_device2',
-								name:'2_device2_name'
-							},
-						],
-					},
-					{
-						id:'3',
-						name:'room3',
-						devices:[
-							{
-								id:'3_device1',
-								name:'3_device1_name'
-							},
-							{
-								id:'3_device2',
-								name:'3_device2_name'
-							},
-							{
-								id:'3_device3',
-								name:'3_device3_name'
-							}
-						]
-					}
-				]
+				dragRoom: false
 			}
+		},
+		mounted: function() {
+			console.log('mounted')
 		},
 		methods: {
 			open (link) {
 				this.$electron.shell.openExternal(link)
+			},
+			swag () {
+				console.log("hello")
+				this.dialogVisible = true
 			}
 		},
 		computed: {
@@ -143,6 +122,9 @@
 					disabled: false,
 					ghostClass: "ghost"
 				};
+			},
+			rooms() {
+				return this.$store.state.board.rooms
 			}
 
 		}
@@ -196,15 +178,17 @@
 
 	.roomColumn {
 		padding:10px;
-		margin:10px;
+		margin-top:10px;
+		margin-right:13px;
+		margin-bottom:10px;
 		min-height: 500px;
 		background-color:rgb(240, 239, 239);
 		border-radius:4px;
-		/* background-color: red; */
+
 		.roomHeader {
+			font-size:24px;
 			border-radius:4px;
 			margin:3px;
-			background-color: cornsilk;
 		}
 		.addDevice {
 			background-color: rgb(149, 201, 149)!important;
