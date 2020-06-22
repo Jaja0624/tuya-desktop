@@ -1,5 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
 const state = {
-  main: 0,
 	// rooms: [
 	// 	{
 	// 		id:'1',
@@ -9,7 +9,7 @@ const state = {
 	// ],
 	rooms: [
 		{
-			id:'1',
+			id: uuidv4(),
 			name:'room1',
 			devices:[
 				{
@@ -32,7 +32,7 @@ const state = {
 			],
 		},
 		{
-			id:'2',
+			id: uuidv4(),
 			name:'room2',
 			devices:[
 				{
@@ -54,7 +54,7 @@ const state = {
 			],
 		},
 		{
-			id:'3',
+			id: uuidv4(),
 			name:'room3',
 			devices:[
 				{
@@ -82,24 +82,69 @@ const state = {
 					on: true
 				}
 			]
+		},
+		{
+			id: uuidv4(),
+			name:'room4',
+			devices:[
+				{
+					id:'4_device1',
+					name:'4_device1_name',
+					description:'test description',
+					localKey:'test localkey',
+					deviceIp:'test device ip',
+					on: true
+				},
+				{
+					id:'4_device2',
+					name:'4_device2_name',
+					description:'test description',
+					localKey:'test localkey',
+					deviceIp:'test device ip',
+					on: true
+				},
+				{
+					id:'4_device3',
+					name:'4_device3_name',
+					description:'test description',
+					localKey:'test localkey',
+					deviceIp:'test device ip',
+					on: true
+				}
+			]
 		}
 	]
 }
 
 const mutations = {
-  DECREMENT_MAIN_COUNTER (state) {
-    state.main--
-  },
-  INCREMENT_MAIN_COUNTER (state) {
-    state.main++
-  }
+	setRooms: (state, rooms) => {
+		console.log("setRooms mutation")
+		state.rooms = rooms
+	},
+	addRoom: (state, roomName) => {
+		console.log("addRoom mut")
+		state.rooms.push({
+			id: uuidv4(),
+			name: roomName,
+			devices:[]
+		})
+	},
+	deleteRoom: (state, roomId) => {
+		const index = state.rooms.findIndex(room => room.id == roomId)
+		state.rooms.splice(index, 1)
+	},
+
+
 }
 
 const actions = {
-  someAsyncTask ({ commit }) {
-    // do something async
-    commit('INCREMENT_MAIN_COUNTER')
-  }
+	updateRooms: ({commit}, rooms) => {
+		commit('setRooms', rooms)
+	},
+	addRoom: ({commit}, roomName) => {
+		commit('addRoom', roomName)
+	}
+
 }
 
 export default {

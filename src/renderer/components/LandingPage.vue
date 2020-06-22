@@ -3,12 +3,12 @@
 		<div class='title'>TUYA-CLIENT</div>
 		<el-row>
 			<el-col :span='6' id='addRoomCol' style='display:flex;'>
-				<el-input placeholder="Add room" v-model="addRoomInput" style='float:left;'></el-input>
-				<el-button type="primary" size='small' icon="el-icon-plus" style='float:left;margin-left:-6px;'></el-button>
+				<el-input placeholder="Add room" v-model="addRoomInput" style='float:left;' @keyup.enter='addRoom'></el-input>
+				<el-button type="primary" size='small' icon="el-icon-plus" style='float:left;margin-left:-6px;' @click='addRoom'></el-button>
 			</el-col>
 			<el-col :span='6' id='toggleAll' style='margin-left:20px; margin-top:7px'>
 				<span style='margin-left:5px; color:white;'>Toggle All</span>
-				<el-button type="primary" size='mini' icon="el-icon-sunrise"></el-button>
+				<el-button type="primary" size='mini' icon="el-icon-sunny"></el-button>
 				<el-button type="danger" size='mini' icon="el-icon-moon"></el-button>
 			</el-col>
 		</el-row>
@@ -19,46 +19,57 @@
 				class='sortable-list'
 				style='background:grey;'>
 				<transition-group type='transition' :name='!dragRoom ? "flip-list" : null'>
-				<el-col :span="6"
-					class='roomColumn sortable'
-					v-for="room in rooms"
-					:key="room.id"
-					v-bind='dragRoomOptions'
-					@start='dragRoom = true'
-					@end='dragRoom = false'>
-					<el-row class='roomHeader'>
-						{{ room.name }}
-					</el-row>
-					
-					
-					<draggable
-						group='room'
-						ghost-class="ghost"
-						:list='room.devices'
-						v-bind='dragDeviceOptions'
-						@start='dragDevice = true'
-						@end='dragDevice = false'>
-						<transition-group type='transition' :name='!dragDevice ? "flip-list" : null'>
-							<el-row
-								class='deviceRow'
-								v-for='device in room.devices'
-								:key='device.id'>
-								deviceName: {{ device.name }}
-								<el-switch
-									style="display: inline block; float: right;"
-									v-model="device.on"
-									active-color="#13ce66"
-									inactive-color="#ff4949">
-								</el-switch>
+					<el-col :span="6"
+						class='roomColumn sortable'
+						v-for="room in rooms"
+						:key="room.id"
+						v-bind='dragRoomOptions'
+						@start='dragRoom = true'
+						@end='dragRoom = false'>
+						<el-row class='roomHeader'>
+							{{ room.name }}
+							<RoomDropdown 
+								:room="room"
+								@edit='dropdowntest'
+								@delete='dropdowntest'/> 
+							
+		
+							<el-row>
+								<span>Toggle All</span>
+								<el-button type="primary" size='mini' icon="el-icon-sunny" style='float:right;'></el-button>
+								<el-button type="danger" size='mini' icon="el-icon-moon" style='float:right;'></el-button>
+							</el-row> 
+						</el-row>
+						
+						
+						<draggable
+							group='room'
+							ghost-class="ghost"
+							:list='room.devices'
+							v-bind='dragDeviceOptions'
+							@start='dragDevice = true'
+							@end='dragDevice = false'>
+							<transition-group type='transition' :name='!dragDevice ? "flip-list" : null'>
+								<el-row
+									class='deviceRow'
+									v-for='device in room.devices'
+									:key='device.id'>
+									deviceName: {{ device.name }}
+									<el-switch
+										style="display: inline block; float: right;"
+										v-model="device.on"
+										active-color="#13ce66"
+										inactive-color="#ff4949">
+									</el-switch>
 
-							</el-row>
-						</transition-group>
-					</draggable>
-					
-					<el-row class='deviceRow addDevice' v-on:click="dialogVisible = true">
-						<el-button type="text" @click="dialogVisible = true">Add device</el-button>
-					</el-row>
-				</el-col>
+								</el-row>
+							</transition-group>
+						</draggable>
+						
+						<el-row class='deviceRow addDevice' v-on:click="dialogVisible = true">
+							<el-button type="text" @click="dialogVisible = true">Add device</el-button>
+						</el-row>
+					</el-col>
 				</transition-group>
 			</draggable>
 		</el-row>
@@ -81,18 +92,22 @@
 
 <script>
 	import draggable from 'vuedraggable'
+	import RoomDropdown from './RoomDropdown.vue'
 	export default {
 		name: 'landing-page',
 		components: {  
-			draggable
+			draggable,
+			RoomDropdown
 		},
 		data () {
 			return {
+				selectedRoom: null,
 				tmp_toggle_1:false,
 				addRoomInput: '',
 				dialogVisible: false,
 				dragDevice: false,
-				dragRoom: false
+				dragRoom: false,
+				
 			}
 		},
 		mounted: function() {
@@ -105,7 +120,14 @@
 			swag () {
 				console.log("hello")
 				this.dialogVisible = true
+			},
+			addRoom () {
+				this.$store.dispatch('addRoom', this.addRoomInput)
+			},
+			dropdowntest (room) {
+				console.log(room)
 			}
+
 		},
 		computed: {
 			dragDeviceOptions() {
@@ -123,8 +145,13 @@
 					ghostClass: "ghost"
 				};
 			},
-			rooms() {
-				return this.$store.state.board.rooms
+			rooms: {
+				get() {
+            		return this.$store.state.board.rooms
+				},
+				set(rooms) {
+					this.$store.dispatch('updateRooms', rooms)
+				}
 			}
 
 		}
@@ -215,4 +242,5 @@
 		opacity: 0.8;
 		background: #c8ebfb;
 	}
+
 </style>
