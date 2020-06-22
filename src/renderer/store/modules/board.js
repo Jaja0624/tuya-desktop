@@ -143,6 +143,9 @@ const actions = {
 	},
 	addRoom: ({commit}, roomName) => {
 		commit('addRoom', roomName)
+	},
+	deleteRoom: ({commit}, roomId) => {
+		commit('deleteRoom', roomId)
 	}
 
 }

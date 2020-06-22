@@ -30,10 +30,9 @@
 							{{ room.name }}
 							<RoomDropdown 
 								:room="room"
-								@edit='dropdowntest'
-								@delete='dropdowntest'/> 
+								@edit='editRoom'
+								@delete='deleteRoom'/> 
 							
-		
 							<el-row>
 								<span>Toggle All</span>
 								<el-button type="primary" size='mini' icon="el-icon-sunny" style='float:right;'></el-button>
@@ -124,8 +123,11 @@
 			addRoom () {
 				this.$store.dispatch('addRoom', this.addRoomInput)
 			},
-			dropdowntest (room) {
-				console.log(room)
+			deleteRoom (room) {
+				this.$store.dispatch('deleteRoom', room.id)
+			},
+			editRoom (room) {
+				console.log("TBD. editRoom dialog = true")
 			}
 
 		},
@@ -204,6 +206,9 @@
 	}
 
 	.roomColumn {
+		opacity: 1;
+		-webkit-transition: opacity 1000ms linear;
+		transition: opacity 1000ms linear;
 		padding:10px;
 		margin-top:10px;
 		margin-right:13px;
