@@ -75,7 +75,7 @@
 <script>
 	import draggable from 'vuedraggable'
 	import DeviceCard from './DeviceCard.vue'
-	import AddDeviceCard from './AddDeviceCard.vue'
+	import AddDeviceCard from './AddDevice/AddDeviceCard.vue'
 	export default {
 		name: 'landing-page',
 		components: {  
@@ -223,7 +223,6 @@
 			}
 		}
 		
-
 		.deviceRow {
 			border-radius:4px;
 			padding: 3px;
