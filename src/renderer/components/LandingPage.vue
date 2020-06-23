@@ -62,7 +62,6 @@
 							</draggable>
 						</el-col>
 						<AddDeviceCard :room='room'/>
-						
 					</el-col>
 				</transition-group>
 			</draggable>
@@ -203,7 +202,7 @@
 		opacity: 1;
 		// -webkit-transition: opacity 1000ms linear;
 		// transition: opacity 1000ms linear;
-
+		overflow: hidden!important;
 		padding:10px;
 		margin-top:10px;
 		margin-right:13px;
@@ -223,11 +222,7 @@
 				margin-top:5px;
 			}
 		}
-		.addDevice {
-			position:absolute;
-			bottom:0;
-			width:75%;
-		}
+		
 
 		.deviceRow {
 			border-radius:4px;

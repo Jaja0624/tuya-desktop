@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-row class='deviceRow addDevice' style='float:right;' v-on:click="addDeviceDialogVisible = true">
+        <el-row class='deviceRow addDevice' style='float:right; text-align:center;' v-on:click="addDeviceDialogVisible = true">
             <el-button type="text" @click="addDeviceDialogVisible = true">Add device<i class="el-icon-plus" style='margin-left:6px; font-size: 20px;'></i></el-button>
         </el-row>
         <el-dialog
@@ -40,9 +40,15 @@
 
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
     .addDeviceDialog {
         padding-top:5px;
     }
+
+    .addDevice {
+        position:absolute;
+        bottom:0;
+        width:100%;
+	}
 
 </style>
