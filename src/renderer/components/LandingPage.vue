@@ -3,7 +3,7 @@
 		<div class='title'>TUYA-CLIENT</div>
 		<el-row>
 			<el-col :span='6' id='addRoomCol' style='display:flex;'>
-				<el-input placeholder="Add room" v-model="addRoomInput" style='float:left;' @keyup.enter='addRoom'></el-input>
+				<el-input placeholder="Add room" v-model="addRoomInput" style='float:left;' @keyup.native.enter='addRoom'></el-input>
 				<el-button type="primary" size='small' icon="el-icon-plus" style='float:left;margin-left:-6px;' @click='addRoom'></el-button>
 			</el-col>
 			<el-col :span='6' id='toggleAll' style='margin-left:20px; margin-top:7px'>
@@ -28,10 +28,11 @@
 						:key="room.id">
 						<el-row class='roomHeader'>
 							{{ room.name }}
-							<RoomDropdown 
+							<i class="el-icon-circle-close deleteRoomIcon"  style='opacity:0.7; float:right;' @click='deleteRoom(room)'></i>
+							<!-- <RoomDropdown 
 								:room="room"
 								@edit='editRoom'
-								@delete='deleteRoom'/>
+								@delete='deleteRoom'/> -->
 							<el-row class='toggleAllRow'>
 								<span>Toggle All</span>
 								<el-button type="primary" size='mini' icon="el-icon-sunny" style='float:right;'></el-button>
@@ -58,14 +59,22 @@
 							</transition-group>
 						</draggable>
 						
-						<el-row class='deviceRow addDevice' v-on:click="dialogVisible = true">
-							<el-button type="text" @click="dialogVisible = true">Add device<i class="el-icon-plus" style='margin-left:6px;'></i></el-button>
+						<el-row class='deviceRow addDevice' style='float:right;' v-on:click="addDeviceDialogVisible = true">
+							<el-button type="text" @click="addDeviceDialogVisible = true">Add device {{ room.name }} <i class="el-icon-plus" style='margin-left:6px;'></i></el-button>
 						</el-row>
+						<el-dialog
+							title="Add Device"
+							:visible.sync="addDeviceDialogVisible"
+							width="30%">
+							<AddDeviceDialogForm :room='room.name'/>
+							<span slot="footer" class="dialog-footer">
+							</span>
+						</el-dialog>
+						
 					</el-col>
 				</transition-group>
 			</draggable>
 		</el-row>
-
 
 	</div>
 
@@ -74,21 +83,21 @@
 
 <script>
 	import draggable from 'vuedraggable'
-	import RoomDropdown from './RoomDropdown.vue'
 	import DeviceCard from './DeviceCard.vue'
+	import AddDeviceDialogForm from './AddDeviceDialogForm.vue'
 	export default {
 		name: 'landing-page',
 		components: {  
 			draggable,
-			RoomDropdown,
-			DeviceCard
+			DeviceCard,
+			AddDeviceDialogForm
 		},
 		data () {
 			return {
 				selectedRoom: null,
 				tmp_toggle_1:false,
 				addRoomInput: '',
-				dialogVisible: false,
+				addDeviceDialogVisible: false,
 				dragDevice: false,
 				dragRoom: false,
 				
@@ -200,8 +209,8 @@
 
 	.roomColumn {
 		opacity: 1;
-		-webkit-transition: opacity 1000ms linear;
-		transition: opacity 1000ms linear;
+		// -webkit-transition: opacity 1000ms linear;
+		// transition: opacity 1000ms linear;
 		padding:10px;
 		margin-top:10px;
 		margin-right:13px;
@@ -248,5 +257,11 @@
 		opacity: 0.8;
 		background: #c8ebfb;
 	}
+	
+
+	.deleteRoomIcon:hover {
+        cursor: pointer;
+        opacity: 1.0!important;
+    }
 
 </style>

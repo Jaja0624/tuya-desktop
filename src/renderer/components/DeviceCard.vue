@@ -19,6 +19,7 @@
 			width="30%">
 			<span>Device: {{ device.name }}</span>
 			<span slot="footer" class="dialog-footer">
+                <el-button type="danger" style='float:left;'>Delete</el-button>
 				<el-button @click="deviceEditDialogVisible = false">Cancel</el-button>
 				<el-button type="primary" @click="deviceEditDialogVisible =false">Add</el-button>
 			</span>
