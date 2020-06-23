@@ -17,23 +17,22 @@
 			<draggable
 				v-model="rooms"
 				class='sortable-list'
-				style='background:grey;'>
-				<transition-group type='transition' :name='!dragRoom ? "flip-list" : null'>
+				style='background:grey;'
+				v-bind='dragRoomOptions'
+				@start='dragRoom = true'
+				@end='dragRoom = false'>
+				<transition-group type='transition' :name='dragRoom ? "flip-list" : null'>
 					<el-col :span="6"
 						class='roomColumn sortable'
 						v-for="room in rooms"
-						:key="room.id"
-						v-bind='dragRoomOptions'
-						@start='dragRoom = true'
-						@end='dragRoom = false'>
+						:key="room.id">
 						<el-row class='roomHeader'>
 							{{ room.name }}
 							<RoomDropdown 
 								:room="room"
 								@edit='editRoom'
-								@delete='deleteRoom'/> 
-							
-							<el-row>
+								@delete='deleteRoom'/>
+							<el-row class='toggleAllRow'>
 								<span>Toggle All</span>
 								<el-button type="primary" size='mini' icon="el-icon-sunny" style='float:right;'></el-button>
 								<el-button type="danger" size='mini' icon="el-icon-moon" style='float:right;'></el-button>
@@ -43,47 +42,31 @@
 						
 						<draggable
 							group='room'
-							ghost-class="ghost"
 							:list='room.devices'
 							v-bind='dragDeviceOptions'
 							@start='dragDevice = true'
 							@end='dragDevice = false'>
 							<transition-group type='transition' :name='!dragDevice ? "flip-list" : null'>
 								<el-row
+									style='margin-top:5px;'
 									class='deviceRow'
 									v-for='device in room.devices'
 									:key='device.id'>
-									deviceName: {{ device.name }}
-									<el-switch
-										style="display: inline block; float: right;"
-										v-model="device.on"
-										active-color="#13ce66"
-										inactive-color="#ff4949">
-									</el-switch>
-
+									<DeviceCard :device='device'/>
+			
 								</el-row>
 							</transition-group>
 						</draggable>
 						
 						<el-row class='deviceRow addDevice' v-on:click="dialogVisible = true">
-							<el-button type="text" @click="dialogVisible = true">Add device</el-button>
+							<el-button type="text" @click="dialogVisible = true">Add device<i class="el-icon-plus" style='margin-left:6px;'></i></el-button>
 						</el-row>
 					</el-col>
 				</transition-group>
 			</draggable>
 		</el-row>
 
-		<el-dialog
-			title="Add device"
-			:visible.sync="dialogVisible"
-			width="30%"
-			:before-close="handleClose">
-			<span>This is a message</span>
-			<span slot="footer" class="dialog-footer">
-				<el-button @click="dialogVisible = false">Cancel</el-button>
-				<el-button type="primary" @click="dialogVisible = false">Add</el-button>
-			</span>
-		</el-dialog>
+
 	</div>
 
 	
@@ -92,11 +75,13 @@
 <script>
 	import draggable from 'vuedraggable'
 	import RoomDropdown from './RoomDropdown.vue'
+	import DeviceCard from './DeviceCard.vue'
 	export default {
 		name: 'landing-page',
 		components: {  
 			draggable,
-			RoomDropdown
+			RoomDropdown,
+			DeviceCard
 		},
 		data () {
 			return {
@@ -137,14 +122,12 @@
 					animation: 200,
 					group: "room",
 					disabled: false,
-					ghostClass: "ghost"
 				};
 			},
 			dragRoomOptions() {
 				return {
 					animation: 200,
 					disabled: false,
-					ghostClass: "ghost"
 				};
 			},
 			rooms: {
@@ -156,12 +139,16 @@
 				}
 			}
 
+		},
+		watch: {
+
 		}
 	}
 </script>
 
 <style lang='scss'>
 	@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+	$default-font: sans-serif;
 
 	* {
 		box-sizing: border-box;
@@ -201,6 +188,12 @@
 		font-weight: bold;
 		margin-bottom: 6px;
 	}
+
+	.toggleAllRow {
+		font-size: 16px;
+		font: $default-font;
+	}
+
 	.el-col {
 		border-radius: 4px;
 	}
@@ -214,7 +207,9 @@
 		margin-right:13px;
 		margin-bottom:10px;
 		min-height: 500px;
-		background-color:rgb(240, 239, 239);
+		background-color: rgb(240, 240, 240);
+		position:relative;
+		
 		border-radius:4px;
 
 		.roomHeader {
@@ -223,15 +218,21 @@
 			margin:3px;
 		}
 		.addDevice {
-			background-color: rgb(149, 201, 149)!important;
+			position:absolute;
+			bottom:0;
+			width:75%;
 		}
 
 		.deviceRow {
 			border-radius:4px;
-			padding: 5px;
-			margin: 5px;
-			background-color: rgb(180, 180, 180)
-		}
+			padding: 3px;
+			background-color:rgb(240, 239, 239);
+
+			.deviceCard {
+				font: $default-font;
+				border-radius:4px;
+			}
+		} 
 	}
 
 	.flip-list-move {
