@@ -27,13 +27,15 @@
 						v-for="room in rooms"
 						:key="room.id">
 						<el-row class='roomHeader'>
-							{{ room.name }}
-							<i class="el-icon-circle-close deleteRoomIcon"  style='opacity:0.7; float:right;' @click='deleteRoom(room)'></i>
+							<div>
+								<span>{{ room.name }}</span>
+								<i class="el-icon-circle-close deleteRoomIcon"  style='opacity:0.7; float:right;' @click='deleteRoom(room)'></i>
+							</div>
 							<!-- <RoomDropdown 
 								:room="room"
 								@edit='editRoom'
 								@delete='deleteRoom'/> -->
-							<el-row class='toggleAllRow'>
+							<el-row class='toggleAllRow' style='margin-top:7px;'>
 								<span>Toggle All</span>
 								<el-button type="primary" size='mini' icon="el-icon-sunny" style='float:right;'></el-button>
 								<el-button type="danger" size='mini' icon="el-icon-moon" style='float:right;'></el-button>
@@ -58,8 +60,8 @@
 								</el-row>
 							</transition-group>
 						</draggable>
-						
-						<el-row class='deviceRow addDevice' style='float:right;' v-on:click="addDeviceDialogVisible = true">
+						<AddDeviceCard :room='room'/>
+						<!-- <el-row class='deviceRow addDevice' style='float:right;' v-on:click="addDeviceDialogVisible = true">
 							<el-button type="text" @click="addDeviceDialogVisible = true">Add device {{ room.name }} <i class="el-icon-plus" style='margin-left:6px;'></i></el-button>
 						</el-row>
 						<el-dialog
@@ -69,7 +71,7 @@
 							<AddDeviceDialogForm :room='room.name'/>
 							<span slot="footer" class="dialog-footer">
 							</span>
-						</el-dialog>
+						</el-dialog> -->
 						
 					</el-col>
 				</transition-group>
@@ -85,12 +87,14 @@
 	import draggable from 'vuedraggable'
 	import DeviceCard from './DeviceCard.vue'
 	import AddDeviceDialogForm from './AddDeviceDialogForm.vue'
+	import AddDeviceCard from './AddDeviceCard.vue'
 	export default {
 		name: 'landing-page',
 		components: {  
 			draggable,
 			DeviceCard,
-			AddDeviceDialogForm
+			AddDeviceCard,
+			AddDeviceDialogForm,
 		},
 		data () {
 			return {
@@ -225,6 +229,10 @@
 			font-size:24px;
 			border-radius:4px;
 			margin:3px;
+
+			.deleteRoomIcon {
+				margin-top:5px;
+			}
 		}
 		.addDevice {
 			position:absolute;
