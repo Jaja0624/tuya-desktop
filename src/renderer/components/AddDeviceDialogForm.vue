@@ -1,7 +1,6 @@
 <template>
     
     <el-form :model="device" ref="addDeviceForm" label-width="120px">
-        <span>Room: {{ room }} </span>
         <el-form-item label="Name" required=true>
             <el-input v-model="device.name" autocomplete="off"></el-input>
         </el-form-item>

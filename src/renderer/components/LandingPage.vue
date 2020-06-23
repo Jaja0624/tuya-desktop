@@ -42,36 +42,26 @@
 							</el-row> 
 						</el-row>
 						
-						
-						<draggable
-							group='room'
-							:list='room.devices'
-							v-bind='dragDeviceOptions'
-							@start='dragDevice = true'
-							@end='dragDevice = false'>
-							<transition-group type='transition' :name='!dragDevice ? "flip-list" : null'>
-								<el-row
-									style='margin-top:5px;'
-									class='deviceRow'
-									v-for='device in room.devices'
-									:key='device.id'>
-									<DeviceCard :device='device'/>
-			
-								</el-row>
-							</transition-group>
-						</draggable>
+						<el-col class='devicesColumn' style='overflow-y: scroll; height:400px;'>
+							<draggable
+								group='room'
+								:list='room.devices'
+								v-bind='dragDeviceOptions'
+								@start='dragDevice = true'
+								@end='dragDevice = false'>
+								<transition-group type='transition' :name='!dragDevice ? "flip-list" : null'>
+									<el-row
+										style='margin-top:5px;'
+										class='deviceRow'
+										v-for='device in room.devices'
+										:key='device.id'>
+										<DeviceCard :device='device'/>
+				
+									</el-row>
+								</transition-group>
+							</draggable>
+						</el-col>
 						<AddDeviceCard :room='room'/>
-						<!-- <el-row class='deviceRow addDevice' style='float:right;' v-on:click="addDeviceDialogVisible = true">
-							<el-button type="text" @click="addDeviceDialogVisible = true">Add device {{ room.name }} <i class="el-icon-plus" style='margin-left:6px;'></i></el-button>
-						</el-row>
-						<el-dialog
-							title="Add Device"
-							:visible.sync="addDeviceDialogVisible"
-							width="30%">
-							<AddDeviceDialogForm :room='room.name'/>
-							<span slot="footer" class="dialog-footer">
-							</span>
-						</el-dialog> -->
 						
 					</el-col>
 				</transition-group>
@@ -86,7 +76,6 @@
 <script>
 	import draggable from 'vuedraggable'
 	import DeviceCard from './DeviceCard.vue'
-	import AddDeviceDialogForm from './AddDeviceDialogForm.vue'
 	import AddDeviceCard from './AddDeviceCard.vue'
 	export default {
 		name: 'landing-page',
@@ -94,7 +83,6 @@
 			draggable,
 			DeviceCard,
 			AddDeviceCard,
-			AddDeviceDialogForm,
 		},
 		data () {
 			return {
@@ -215,6 +203,7 @@
 		opacity: 1;
 		// -webkit-transition: opacity 1000ms linear;
 		// transition: opacity 1000ms linear;
+
 		padding:10px;
 		margin-top:10px;
 		margin-right:13px;

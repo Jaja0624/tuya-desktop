@@ -1,26 +1,21 @@
 <template>
     <div>
         <el-row class='deviceRow addDevice' style='float:right;' v-on:click="addDeviceDialogVisible = true">
-            <el-button type="text" @click="addDeviceDialogVisible = true">Add device {{ room.name }} <i class="el-icon-plus" style='margin-left:6px;'></i></el-button>
+            <el-button type="text" @click="addDeviceDialogVisible = true">Add device<i class="el-icon-plus" style='margin-left:6px; font-size: 20px;'></i></el-button>
         </el-row>
         <el-dialog
-            title="Add Device"
+            class='addDeviceDialog'
             :visible.sync="addDeviceDialogVisible"
             width="30%">
+            <span slot='title'>Add device to — <span style='font-weight: bold'>{{ this.room.name }}</span></span>
             <AddDeviceDialogForm :room='room.name'/>
             <span slot="footer" class="dialog-footer">
-        </span>
+            </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    // id:'4_device1',
-    // name:'4_device1_name',
-    // description:'test description',
-    // localKey:'test localkey',
-    // deviceIp:'test device ip',
-    // on: true
     import AddDeviceDialogForm from './AddDeviceDialogForm.vue'
     export default {
         name: 'AddDeviceCard',
@@ -32,7 +27,7 @@
         },
         data () {
             return {
-                addDeviceDialogVisible: false
+                addDeviceDialogVisible: false,
             }
         },
         methods: {
@@ -46,5 +41,8 @@
 </script>
 
 <style lang='scss'>
+    .addDeviceDialog {
+        padding-top:5px;
+    }
 
 </style>
