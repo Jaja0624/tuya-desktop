@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+const TuyaDevice = require('tuyapi')
 
 export function makeDevice(device) {
     return {
@@ -6,18 +7,25 @@ export function makeDevice(device) {
         name: device.name,
         description: device.description,
         localKey: device.localKey,
-        deviceIp: device.deviceIp,
+        virtualId: device.virtualId,
+        status: null,
+        tuyaDevice: new TuyaDevice({
+            id: device.virtualId,
+            key: device.localKey
+        })
 
     }
 }
 
 export function makeDeviceFake() {
-    return makeDevice({
+    return {
+        id: uuidv4(),
         name: makeid(5),
         description: makeid(10),
         localKey: makeid(25),
-        deviceIp: makeid(12)
-    })
+        virtualId: makeid(12),
+        status: null
+    }
     
 }
 

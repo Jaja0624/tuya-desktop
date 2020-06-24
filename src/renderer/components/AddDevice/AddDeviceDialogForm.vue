@@ -8,7 +8,7 @@
                 <el-input v-model="device.localKey" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="Device IP" required>
-                <el-input v-model="device.deviceIp"></el-input>
+                <el-input v-model="device.virtualId"></el-input>
             </el-form-item>
             <el-form-item label="Description">
                 <el-input v-model="device.description"></el-input>
@@ -33,7 +33,7 @@
                 device: {
                     name: '',
                     localKey: '',
-                    deviceIp: '',
+                    virtualId: '',
                     description:''
                 },
                 rules: {

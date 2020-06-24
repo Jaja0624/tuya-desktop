@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { makeDevice, makeDeviceFake } from '../../utils/makeDevice'
+import { getRoomById, getRoomByDeviceId, getDeviceById} from '../../utils/rooms'
+const TuyaDevice = require('tuyapi')
 const state = {
 	// rooms: [
 	// 	{
@@ -38,6 +40,10 @@ const state = {
 	]
 }
 
+const getters = {
+
+}
+
 const mutations = {
 	setRooms: (state, rooms) => {
 		console.log("setRooms mutation")
@@ -57,17 +63,20 @@ const mutations = {
 	},
 	
 	addDevice: (state, {roomId, device}) => {
-		console.log(device)
-		const room = state.rooms.find(room => room.id === roomId)
-		console.log(makeDevice(device))
+		console.log("creating: " + device.name)
+		const room = getRoomById(state.rooms, roomId)
 		room.devices.push(makeDevice(device))
 	},
 	deleteDevice: (state, deviceId) => {
-		const room = state.rooms.find(room => room.devices.find(device => device.id === deviceId))
+		const room = getRoomByDeviceId(state.rooms, deviceId)
 		room.devices.splice(room.devices.findIndex(device => device.id === deviceId), 1)
+	},
+
+	updateDeviceStatus: (state, {deviceId, newStatus}) => {
+		const room = getRoomByDeviceId(state.rooms, deviceId)
+		room.devices.find(device => device.id === deviceId).status = newStatus
+		
 	}
-
-
 }
 
 const actions = {
@@ -90,6 +99,45 @@ const actions = {
 	updateDevice: ({commit}, device) => {
 		commit('updateDevice', device)
 	},
+	updateDeviceStatus: (context, {deviceId, newStatus}) => {
+		const dev = getDeviceById(context.state.rooms, deviceId)
+		if (dev) {
+			// yes this is pretty ugly but it works...
+			(async () => {
+				const tuyaDevice = new TuyaDevice({
+					id: dev.virtualId,
+					key: dev.localKey
+				})
+				await tuyaDevice.find();
+			
+				await tuyaDevice.connect();
+			
+				let status = await tuyaDevice.get();
+			
+				console.log(`Current status: ${status}.`);
+			
+				await tuyaDevice.set({set: newStatus});
+			
+				status = await tuyaDevice.get();
+			
+				console.log(`New status: ${status}.`);
+			
+				tuyaDevice.disconnect();
+			})();
+			context.commit('updateDeviceStatus', {deviceId, newStatus})
+		} else {
+			console.log(dev)
+		}
+		
+		
+	},
+	checkAllDeviceStatus: (context) => {
+		const rooms = context.state.rooms.filter(room => room.devices.filter(device => device.hasOwnProperty("tuyaDevice")))
+		rooms.forEach(room => {
+			room.status = room.tuyaDevice
+		})
+		console.log("checking device status")
+	}
 
 
 }

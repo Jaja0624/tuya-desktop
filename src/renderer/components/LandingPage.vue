@@ -97,6 +97,9 @@
 		mounted: function() {
 			console.log('mounted')
 		},
+		created: function() {
+			this.pollData()
+		},
 		methods: {
 			open (link) {
 				this.$electron.shell.openExternal(link)
@@ -107,13 +110,19 @@
 			},
 			addRoom () {
 				this.$store.dispatch('addRoom', this.addRoomInput)
+				this.addRoomInput = ""
 			},
 			deleteRoom (room) {
 				this.$store.dispatch('deleteRoom', room.id)
 			},
 			editRoom (room) {
 				console.log("TBD. editRoom dialog = true")
-			}
+			},
+			pollData () {
+				this.polling = setInterval(() => {
+					this.$store.dispatch('checkAllDeviceStatus')
+				}, 3000)
+			},
 
 		},
 		computed: {

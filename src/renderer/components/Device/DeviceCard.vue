@@ -4,12 +4,14 @@
             <el-card class="box-card deviceCard" @click.native.prevent='deviceEditDialogVisible = true'>
                 {{ device.name }}
                 <el-switch
-                    @click.native.prevent.stop
+                    @click.native.prevent.stop='toggleDevice'
                     style="display: inline block; float: right;"
-                    v-model="device.on"
+                    v-model="deviceStatus"
                     active-color="#13ce66"
                     inactive-color="#ff4949">
                 </el-switch>
+                <!-- :disabled='device.status ? false : true' -->
+
             </el-card>
         </div>
         
@@ -17,12 +19,12 @@
 			:visible.sync="deviceEditDialogVisible"
 			width="30%">
 			<span slot='title'>Edit Device — <span style='font-weight: bold'>{{ device.name }}</span></span>
-            <EditDeviceDialogForm/>
+            <EditDeviceDialogForm :device='device'/>
             <!-- Having elements that show/hide the dialog here means we do not have to pass around visible property -->
 			<span slot="footer" class="dialog-footer">
                 <el-button type="danger" style='float:left;' @click='deleteDevice(device.id)'>Delete</el-button>
 				<el-button @click="deviceEditDialogVisible = false">Cancel</el-button>
-				<el-button type="primary" @click="deviceEditDialogVisible =false">Add</el-button>
+				<el-button type="primary" @click="deviceEditDialogVisible = false" disabled>Save</el-button>
 			</span>
 	    </el-dialog>
     </div>
@@ -41,18 +43,20 @@
         },
         data () {
             return {
-                deviceEditDialogVisible: false
+                deviceEditDialogVisible: false,
+                deviceStatus: this.device.status
             }
             
         },
         methods: {
-            testf () {
+            toggleDevice () {
+                this.$store.dispatch('updateDeviceStatus', {deviceId: this.device.id, newStatus: !this.device.status})
                 console.log("dadada")
             },
             deleteDevice(deviceId) {
                 this.$store.dispatch('deleteDevice', deviceId)
             }
-        }
+        },
     }
 
 </script>
