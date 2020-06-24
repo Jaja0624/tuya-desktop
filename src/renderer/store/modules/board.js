@@ -146,6 +146,10 @@ const mutations = {
 		const room = state.rooms.find(room => room.id === roomId)
 		console.log(makeDevice(device))
 		room.devices.push(makeDevice(device))
+	},
+	deleteDevice: (state, deviceId) => {
+		const room = state.rooms.find(room => room.devices.find(device => device.id === deviceId))
+		room.devices.splice(room.devices.findIndex(device => device.id === deviceId), 1)
 	}
 
 

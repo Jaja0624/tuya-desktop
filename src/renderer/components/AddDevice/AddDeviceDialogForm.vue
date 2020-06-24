@@ -14,8 +14,8 @@
                 <el-input v-model="device.description"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click='submitForm'>Submit</el-button>
-                <el-button @click='clearForm'>Clear</el-button>
+                <el-button type="primary" @click="submitForm('device')">Submit</el-button>
+                <el-button @click='resetForm'>Clear</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -35,29 +35,34 @@
                     localKey: '',
                     deviceIp: '',
                     description:''
+                },
+                rules: {
+                    name: [
+                        { required: true, message: 'Name required', trigger:'blur'},
+                    ]
                 }
             }
         },
         methods: {
-            submitForm() {
-                console.log(this.device)
-                console.log("adding device to room" + this.room)
-                this.$store.dispatch('addDevice', {roomId: this.room.id, device: this.device})
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.$store.dispatch('addDevice', {roomId: this.room.id, device: this.device})
+                    } else {
+                        return false;
+                    }
+                })
+                
             },
-            clearForm() {
-                console.log("CLEAR")
-                this.$refs['device'].resetFields()
+            resetForm() {
+                console.log(this.$refs.device)
+                this.$refs.device.resetFields()
             }
 
         },
         computed: {
             
         },
-        watch: {
-            device: function() {
-                console.log(this.device)
-            }
-        }
     }
 
 </script>

@@ -20,7 +20,7 @@
             <EditDeviceDialogForm/>
             <!-- Having elements that show/hide the dialog here means we do not have to pass around visible property -->
 			<span slot="footer" class="dialog-footer">
-                <el-button type="danger" style='float:left;'>Delete</el-button>
+                <el-button type="danger" style='float:left;' @click='deleteDevice(device.id)'>Delete</el-button>
 				<el-button @click="deviceEditDialogVisible = false">Cancel</el-button>
 				<el-button type="primary" @click="deviceEditDialogVisible =false">Add</el-button>
 			</span>
@@ -49,6 +49,9 @@
             testf () {
                 console.log("dadada")
             },
+            deleteDevice(deviceId) {
+                this.$store.dispatch('deleteDevice', deviceId)
+            }
         }
     }
 
