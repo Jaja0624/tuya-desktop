@@ -8,7 +8,7 @@
             :visible.sync="addDeviceDialogVisible"
             width="30%">
             <span slot='title'>Add device to — <span style='font-weight: bold'>{{ room.name }}</span></span>
-            <AddDeviceDialogForm :room='room'/>
+            <AddDeviceDialogForm :room='room' @closeForm='addDeviceDialogVisible = false'/>
         </el-dialog>
     </div>
 </template>

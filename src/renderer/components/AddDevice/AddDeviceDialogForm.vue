@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class='addDeviceForm'>
         <el-form :model="device" ref="device" label-width="120px">
             <el-form-item label="Name" required>
                 <el-input v-model="device.name" autocomplete="off"></el-input>
@@ -48,6 +48,7 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         this.$store.dispatch('addDevice', {roomId: this.room.id, device: this.device})
+                        this.$emit('closeForm')
                     } else {
                         return false;
                     }
