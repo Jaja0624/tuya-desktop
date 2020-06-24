@@ -74,7 +74,7 @@
 
 <script>
 	import draggable from 'vuedraggable'
-	import DeviceCard from './DeviceCard.vue'
+	import DeviceCard from './Device/DeviceCard.vue'
 	import AddDeviceCard from './AddDevice/AddDeviceCard.vue'
 	export default {
 		name: 'landing-page',

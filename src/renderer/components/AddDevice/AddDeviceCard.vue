@@ -7,10 +7,8 @@
             class='addDeviceDialog'
             :visible.sync="addDeviceDialogVisible"
             width="30%">
-            <span slot='title'>Add device to — <span style='font-weight: bold'>{{ this.room.name }}</span></span>
-            <AddDeviceDialogForm :room='room.name'/>
-            <span slot="footer" class="dialog-footer">
-            </span>
+            <span slot='title'>Add device to — <span style='font-weight: bold'>{{ room.name }}</span></span>
+            <AddDeviceDialogForm :room='room'/>
         </el-dialog>
     </div>
 </template>

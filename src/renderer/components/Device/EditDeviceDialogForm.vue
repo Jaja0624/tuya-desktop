@@ -1,16 +1,11 @@
 <template>
-
+    <span>I am EditDeviceDialogForm</span>
 </template>
 
 <script>
-    // id:'4_device1',
-    // name:'4_device1_name',
-    // description:'test description',
-    // localKey:'test localkey',
-    // deviceIp:'test device ip',
-    // on: true
+    // Form for editing device
     export default {
-        name: 'DeviceEditDialog',
+        name: 'EditDeviceDialogForm',
         props: {
         },
         data () {
@@ -30,6 +25,6 @@
 
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
 
 </style>

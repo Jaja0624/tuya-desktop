@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { makeDevice, makeDeviceFake } from '../../utils/makeDevice'
 const state = {
 	// rooms: [
 	// 	{
@@ -11,7 +12,7 @@ const state = {
 		{
 			id: uuidv4(),
 			name:'room1',
-			devices:[
+			devices: [
 				{
 					id:'1_device1',
 					name:'1_device1_name',
@@ -30,6 +31,7 @@ const state = {
 					
 				}
 			],
+			
 		},
 		{
 			id: uuidv4(),
@@ -112,6 +114,11 @@ const state = {
 					on: true
 				}
 			]
+		},
+		{
+			id: uuidv4(),
+			name:'room5',
+			devices:[makeDeviceFake(), makeDeviceFake()]
 		}
 	]
 }
@@ -133,6 +140,13 @@ const mutations = {
 		const index = state.rooms.findIndex(room => room.id == roomId)
 		state.rooms.splice(index, 1)
 	},
+	
+	addDevice: (state, {roomId, device}) => {
+		console.log(device)
+		const room = state.rooms.find(room => room.id === roomId)
+		console.log(makeDevice(device))
+		room.devices.push(makeDevice(device))
+	}
 
 
 }
@@ -146,7 +160,19 @@ const actions = {
 	},
 	deleteRoom: ({commit}, roomId) => {
 		commit('deleteRoom', roomId)
-	}
+	},
+
+	addDevice: ({commit}, {roomId, device}) => {
+		commit('addDevice', {roomId, device})
+	},
+	deleteDevice: ({commit}, deviceId) => {
+		commit('deleteDevice', deviceId)
+	},
+	updateDevice: ({commit}, device) => {
+		commit('updateDevice', device)
+	},
+
+	// add device, delete device, modify device (delete then add)
 
 }
 

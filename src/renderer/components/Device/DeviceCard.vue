@@ -14,10 +14,11 @@
         </div>
         
         <el-dialog
-			title="Edit Device"
 			:visible.sync="deviceEditDialogVisible"
 			width="30%">
-			<span>Device: {{ device.name }}</span>
+			<span slot='title'>Edit Device — <span style='font-weight: bold'>{{ device.name }}</span></span>
+            <EditDeviceDialogForm/>
+            <!-- Having elements that show/hide the dialog here means we do not have to pass around visible property -->
 			<span slot="footer" class="dialog-footer">
                 <el-button type="danger" style='float:left;'>Delete</el-button>
 				<el-button @click="deviceEditDialogVisible = false">Cancel</el-button>
@@ -29,11 +30,11 @@
 </template>
 
 <script>
-    import DeviceEditDialog from './DeviceEditDialog.vue'
+    import EditDeviceDialogForm from './EditDeviceDialogForm.vue'
     export default {
         name: "DeviceCard",
         components: {  
-			DeviceEditDialog,
+			EditDeviceDialogForm,
 		},
         props: {
             device: Object
