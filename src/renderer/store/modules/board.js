@@ -73,8 +73,13 @@ const mutations = {
 	},
 
 	updateDeviceStatus: (state, {deviceId, newStatus}) => {
-		const room = getRoomByDeviceId(state.rooms, deviceId)
-		room.devices.find(device => device.id === deviceId).status = newStatus
+		if (newStatus === true || newStatus === false) {
+			const dev = getDeviceById(state.rooms, deviceId)
+			console.log("updated to new status " + newStatus)
+			dev.status = newStatus
+		} else {
+			console.log("failed to update to new status " + newStatus)
+		}
 		
 	}
 }
@@ -99,7 +104,31 @@ const actions = {
 	updateDevice: ({commit}, device) => {
 		commit('updateDevice', device)
 	},
-	updateDeviceStatus: (context, {deviceId, newStatus}) => {
+	toggleDeviceStatus: (context, deviceId) => {
+		const dev = getDeviceById(context.state.rooms, deviceId)
+		if (dev) {
+			// yes this is pretty ugly but it works...
+			(async () => {
+				const tuyaDevice = new TuyaDevice({
+					id: dev.virtualId,
+					key: dev.localKey
+				})
+				await tuyaDevice.find();
+				await tuyaDevice.connect();
+				let status = await tuyaDevice.get();
+				await tuyaDevice.set({set: !status});
+				status = await tuyaDevice.get();
+				console.log(typeof(status));
+				context.commit('updateDeviceStatus', {deviceId: deviceId, newStatus: status})
+				tuyaDevice.disconnect();
+			})();
+			
+		} else {
+			console.log(dev)
+		}
+		
+	},
+	checkDeviceStatus: (context, deviceId) => {
 		const dev = getDeviceById(context.state.rooms, deviceId)
 		if (dev) {
 			// yes this is pretty ugly but it works...
@@ -114,21 +143,13 @@ const actions = {
 			
 				let status = await tuyaDevice.get();
 			
-				console.log(`Current status: ${status}.`);
-			
-				await tuyaDevice.set({set: newStatus});
-			
-				status = await tuyaDevice.get();
-			
-				console.log(`New status: ${status}.`);
-			
 				tuyaDevice.disconnect();
+				context.commit('updateDeviceStatus', {deviceId, status})
 			})();
-			context.commit('updateDeviceStatus', {deviceId, newStatus})
+			
 		} else {
 			console.log(dev)
 		}
-		
 		
 	},
 	checkAllDeviceStatus: (context) => {

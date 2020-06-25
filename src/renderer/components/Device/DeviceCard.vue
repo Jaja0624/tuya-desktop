@@ -6,7 +6,7 @@
                 <el-switch
                     @click.native.prevent.stop='toggleDevice'
                     style="display: inline block; float: right;"
-                    v-model="deviceStatus"
+                    v-model="device.status"
                     active-color="#13ce66"
                     inactive-color="#ff4949">
                 </el-switch>
@@ -44,13 +44,15 @@
         data () {
             return {
                 deviceEditDialogVisible: false,
-                deviceStatus: this.device.status
             }
+            
+        },
+        created: function() {
             
         },
         methods: {
             toggleDevice () {
-                this.$store.dispatch('updateDeviceStatus', {deviceId: this.device.id, newStatus: !this.device.status})
+                this.$store.dispatch('toggleDeviceStatus', this.device.id)
                 console.log("dadada")
             },
             deleteDevice(deviceId) {
