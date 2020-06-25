@@ -81,6 +81,10 @@ const mutations = {
 			console.log("failed to update to new status " + newStatus)
 		}
 		
+	},
+
+	setDevicesStatus: (state, roomId) => {
+
 	}
 }
 
@@ -152,14 +156,10 @@ const actions = {
 		}
 		
 	},
-	checkAllDeviceStatus: (context) => {
-		const rooms = context.state.rooms.filter(room => room.devices.filter(device => device.hasOwnProperty("tuyaDevice")))
-		rooms.forEach(room => {
-			room.status = room.tuyaDevice
-		})
-		console.log("checking device status")
+	setRoomStatus: ({commit}, {roomId, newStatus}) => {
+		// get all devices (using a getter i guess)
+		commit('setDevicesStatus', {roomId, newStatus})
 	}
-
 
 }
 

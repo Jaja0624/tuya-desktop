@@ -98,7 +98,6 @@
 			console.log('mounted')
 		},
 		created: function() {
-			this.pollData()
 		},
 		methods: {
 			open (link) {
@@ -117,11 +116,6 @@
 			},
 			editRoom (room) {
 				console.log("TBD. editRoom dialog = true")
-			},
-			pollData () {
-				this.polling = setInterval(() => {
-					this.$store.dispatch('checkAllDeviceStatus')
-				}, 3000)
 			},
 
 		},

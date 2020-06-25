@@ -7,7 +7,7 @@
             <el-form-item label="Local Key" required>
                 <el-input v-model="device.localKey" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="Device IP" required>
+            <el-form-item label="Device ID" required>
                 <el-input v-model="device.virtualId"></el-input>
             </el-form-item>
             <el-form-item label="Description">
