@@ -12,3 +12,12 @@ export function getDeviceById(rooms, deviceId) {
         return room.devices.find(device => device.id === deviceId)
     }
 }
+
+export function getAllDevices(rooms) {
+    devices = []
+    for (room of rooms) {
+        for (device of rooms.devices)
+        devices.push_back(device)
+    }
+    return devices
+}

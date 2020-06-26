@@ -21,6 +21,7 @@
     "postinstall": ""
   },
   "dependencies": {
+    "async": "^3.2.0",
     "axios": "^0.18.0",
     "element-ui": "^2.13.2",
     "tuyapi": "github:codetheweb/tuyapi",

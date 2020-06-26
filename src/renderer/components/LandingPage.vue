@@ -37,8 +37,8 @@
 								@delete='deleteRoom'/> -->
 							<el-row class='toggleAllRow' style='margin-top:7px;'>
 								<span>Toggle All</span>
-								<el-button type="primary" size='mini' icon="el-icon-sunny" style='float:right;'></el-button>
-								<el-button type="danger" size='mini' icon="el-icon-moon" style='float:right;'></el-button>
+								<el-button type="primary" size='mini' icon="el-icon-sunny" style='float:right;' @click='toggleRoomDevices(room.id, true)'></el-button>
+								<el-button type="danger" size='mini' icon="el-icon-moon" style='float:right;' @click='toggleRoomDevices(room.id, false)'></el-button>
 							</el-row> 
 						</el-row>
 						
@@ -117,6 +117,9 @@
 			editRoom (room) {
 				console.log("TBD. editRoom dialog = true")
 			},
+			toggleRoomDevices(roomId, newStatus) {
+				this.$store.dispatch('setRoomStatus', {roomId: roomId, newStatus: newStatus})
+			}
 
 		},
 		computed: {

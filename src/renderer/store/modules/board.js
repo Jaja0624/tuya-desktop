@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeDevice, makeDeviceFake } from '../../utils/makeDevice'
 import { getRoomById, getRoomByDeviceId, getDeviceById} from '../../utils/rooms'
 const TuyaDevice = require('tuyapi')
+const async = require('async')
 const state = {
 	// rooms: [
 	// 	{
@@ -83,9 +84,6 @@ const mutations = {
 		
 	},
 
-	setDevicesStatus: (state, roomId) => {
-
-	}
 }
 
 const actions = {
@@ -130,7 +128,6 @@ const actions = {
 		} else {
 			console.log(dev)
 		}
-		
 	},
 	checkDeviceStatus: (context, deviceId) => {
 		const dev = getDeviceById(context.state.rooms, deviceId)
@@ -156,9 +153,34 @@ const actions = {
 		}
 		
 	},
-	setRoomStatus: ({commit}, {roomId, newStatus}) => {
-		// get all devices (using a getter i guess)
-		commit('setDevicesStatus', {roomId, newStatus})
+	setDeviceStatus: (context, {deviceId, newStatus}) => {
+		const dev = getDeviceById(context.state.rooms, deviceId)
+		if (dev) {
+			// yes this is pretty ugly but it works...
+			(async () => {
+				const tuyaDevice = new TuyaDevice({
+					id: dev.virtualId,
+					key: dev.localKey
+				})
+				await tuyaDevice.find();
+				await tuyaDevice.connect();
+				let status = await tuyaDevice.get();
+				await tuyaDevice.set({set: newStatus});
+				status = await tuyaDevice.get();
+				console.log(typeof(status));
+				context.commit('updateDeviceStatus', {deviceId: deviceId, newStatus: status})
+				tuyaDevice.disconnect();
+			})();
+			
+		} else {
+			console.log(dev)
+		}
+	},
+	setRoomStatus: (context, {roomId, newStatus}) => {
+		const devices = getRoomById(context.state.rooms, roomId).devices
+		async.each(devices, function(device, err){
+			context.dispatch('setDeviceStatus', {deviceId: device.id, newStatus: newStatus})
+		});
 	}
 
 }
