@@ -17,6 +17,7 @@
 - Tests
 - Code cleanup
 
+![d](https://github.com/Jaja0624/tuya-desktop/blob/master/static/demo.PNG)
 
 #### Build Setup
 
